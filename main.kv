@@ -1,0 +1,693 @@
+#: import MDDatatable kivymd.uix.datatables
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+windowManager:
+    splashWindow:
+    dashWindow:
+    id: SM       
+
+
+<splashWindow>:
+    name: "splash"
+    MDFloatLayout:
+        md_bg_color: 1, 1, 1, 1
+        Image:
+            source: "assets/logo-large.png"
+            pos_hint: {"center_x": .5, "center_y": .55}
+            #anim_loop: 1
+            anim_delay: 0
+            #allow_stretch: True 
+            #keep_ratio: False
+            keep_data: True
+            canvas.before:
+                Color:
+                    rgb: 1, 1, 1, 1
+        MDLabel:
+            text: "Lottery Magic"
+            pos_hint: {"center_x": .54, "center_y":.2}
+            halig: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0, 1
+            font_size: "35sp"
+            font_name: "Poppins-SemiBold.ttf"
+        MDLabel:
+            text: "Your best chance to win!"
+            pos_hint: {"center_x": .54, "center_y":.15}
+            halig: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0, 1
+            font_size: "13sp"
+            font_name: "Poppins-Regular.ttf"
+
+<TextFieldRound@MDTextFieldRound>
+    size_hint_x: None
+    normal_color: color_shadow
+    active_color: color_shadow
+
+<ToolTipSpinner>:
+<Tooltip>:
+    size_hint: None, None
+    size: self.texture_size[0]+5, self.texture_size[1]+5
+    canvas.before:
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+# GUI to show dashboard
+<dashWindow>:
+    num : num
+    winpercentage : winpercentage
+    on_pre_enter: root.generate_settings()    
+        
+    MDBoxLayout:
+        oreintation: 'vertical'
+
+        MDBottomNavigation:
+            
+
+            MDBottomNavigationItem:
+                id: dash
+                name: "dash"
+                text: "dash"
+                icon: "view-dashboard"   
+                md_bg_color: 1, 1, 1, 1
+
+                MDFloatLayout:
+                    size_hint: 1, .2
+                    pos_hint: {"center_x": .5, "center_y": 1}
+                    md_bg_color: 239/255, 239/255, 239/255, 1
+                Image:
+                    source: "assets/megaLogo.png"
+                    pos_hint: {'center_x': .5, 'center_y': .95}  
+                    size_hint: .5, .5   
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .85}
+                    MDLabel:         
+                        id: sets_label       
+                        text: "How Many Sets?:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    NumericInput:
+                        min_value : 0
+                        max_value : 50
+                        hint_text : 'Enter num between {} and {}'.format(self.min_value + 1, self.max_value)
+                        #hint_font_size: 10
+                        id : num
+                        size_hint_y: .75
+                        font_name: "Poppins-Regular.ttf"
+                        pos_hint: {"center_x": .91, "center_y": .9}
+                        background_color: 0, 0, 0, 0
+                        cursor_color: 0, 0, 0, 1
+                        cursor_width: "2sp"
+                        foreground_color: 120/255, 120/255, 120/255, 1
+                        font_size: "14sp"
+                        multiline: False    
+                        input_filter: 'int' 
+                        padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0] 
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Number of lotto sets to be emailed.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .78}
+                    MDLabel:                
+                        text: "Recommended Algorithms"
+                        font_size: "14sp"
+                        font_name: "Poppins-Bold.ttf"
+                        pos_hint: {"center_x": .5, "center_y": .78}
+                        halign: 'center'
+                        #theme_text_color: "Custom"
+                        #text_color: 0, 0, 0, 1
+                        #md_bg_color: 239/255, 239/255, 239/255, 1
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Widely used algorithms that you can turn on or off.'
+                        pos_hint: {"center_x": .16, "center_y": .78}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .7}
+                    MDLabel:                
+                        text: "Sum Of First Five:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDCheckbox:
+                        id: sum
+                        active: True
+                        size_hint: .1,.1
+                        size: "48dp", "48dp"
+                        pos_hint: {"center_x": .8, "center_y": .9}
+                        on_active: root.set_sum_mod(self)  # triggers method call when active changes
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Sum of the first five numbers are between 132 and 233.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .65}
+                    MDLabel:                
+                        text: "High/Low Balance:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDCheckbox:
+                        id: highlow
+                        active: True
+                        size_hint: .1,.1
+                        size: "48dp", "48dp"
+                        pos_hint: {"center_x": .8, "center_y": .9}
+                        on_active: root.set_highlow_mod(self)  # triggers method call when active changes
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'High/Low ration should be 3/2 or 2/3 for first 5 numbers.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .6}
+                    MDLabel:                
+                        text: "Even/Odd Balance:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDCheckbox:
+                        id: evenodd
+                        active: True
+                        size_hint: .1,.1
+                        size: "48dp", "48dp"
+                        pos_hint: {"center_x": .8, "center_y": .9}
+                        on_active: root.set_evenodd_mod(self)  # triggers method call when active changes
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Even/Odd ration should be 3/2 or 2/3 for first 5 numbers.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .55}
+                    MDLabel:                
+                        text: "Numbered Group Skips:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDCheckbox:
+                        id: groupskips
+                        active: True
+                        size_hint: .1,.1
+                        size: "48dp", "48dp"
+                        pos_hint: {"center_x": .8, "center_y": .9}
+                        on_active: root.set_groupskips_mod(self)  # triggers method call when active changes
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'At most four number groups can be represented.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    MDLabel:    
+                        id: onerepeatlabel            
+                        text: "Only One Repeat:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDCheckbox:
+                        id: onerepeat
+                        active: True
+                        size_hint: .1,.1
+                        size: "48dp", "48dp"
+                        pos_hint: {"center_x": .8, "center_y": .9}
+                        on_active: root.set_onerepeat_mod(self)  # triggers method call when active changes
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'At most only one number can be repeated from previous draw.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .45}
+                    MDLabel:        
+                        id: fourhotlabel        
+                        text: "Four Hot numbers:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDCheckbox:
+                        id: fourhot
+                        active: True
+                        size_hint: .1,.1
+                        size: "1dp", "1dp"
+                        pos_hint: {"center_x": .8, "center_y": .9}
+                        on_active: root.set_fourhot_mod(self)  # triggers method call when active changes
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'At least 4 values must have been played in the last 6 games.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .38}
+                    MDLabel:                
+                        text: "Conditional Algorithms"
+                        font_size: "14sp"
+                        font_name: "Poppins-Bold.ttf"
+                        pos_hint: {"center_x": .5, "center_y": .78}
+                        halign: 'center'
+                        #md_bg_color: 239/255, 239/255, 239/255, 1
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Algorithms that can be activated conditionally.'
+                        pos_hint: {"center_x": .21, "center_y": .78}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .3}
+                    MDLabel:                
+                        text: "Most Frequent Numbers:"
+                        id: mostfreq_label
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDCheckbox:
+                        id: mostfreq
+                        active: False
+                        size_hint: .1,.1
+                        size: "1dp", "1dp"
+                        pos_hint: {"center_x": .8, "center_y": .9}
+                        on_active: root.set_mostfreq_mod(self)  # triggers method call when active changes
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Only generate the most frequently chosen numbers.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .25}
+                    MDLabel:                
+                        text: "Least Frequent Numbers:"
+                        id: leastfreq_label
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDCheckbox:
+                        id: leastfreq
+                        active: False
+                        size_hint: .1,.1
+                        size: "1dp", "1dp"
+                        pos_hint: {"center_x": .8, "center_y": .9}
+                        on_active: root.set_leastfreq_mod(self)  # triggers method call when active changes
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Only generate the least frequently chosen numbers.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .2}
+                    MDLabel:                
+                        text: "Never Been Drawn:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDCheckbox:
+                        id: neverdrawn
+                        active: False
+                        size_hint: .1,.1
+                        size: "1dp", "1dp"
+                        pos_hint: {"center_x": .8, "center_y": .9}
+                        on_active: root.set_neverdrawn_mod(self)  # triggers method call when active changes
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Only generate sets that have never been drawn.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .15}
+                    MDLabel:                
+                        text: "Total Historical Win Odds:"
+                        id: total_label
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDCheckbox:
+                        id: winbox
+                        active: False
+                        size_hint: .1,.1
+                        size: "1dp", "1dp"
+                        pos_hint: {"center_x": .8, "center_y": .9}
+                        on_active: root.set_winodds_mod(self)  # triggers method call when active changes
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Only generate sets greater than or equal to win odds value set.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .1}
+                    MDLabel:    
+                        id: win_label            
+                        text: "Win Odds%*:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .5, "center_y": .9}
+                        theme_text_color: "Custom"
+                        text_color: 228/255, 233/255, 237/255, 1
+                    NumericInput:
+                        id : winpercentage
+                        min_value : 0
+                        max_value : 10
+                        hint_text : 'Enter values between {}% and {}%'.format(self.min_value + 1, self.max_value)
+                        theme_text_color: "Custom"
+                        #hint_text_color: 0.2, 0.2, 0.2, 1
+                        #hint_font_size: 10                        
+                        size_hint_y: .75
+                        font_name: "Poppins-Regular.ttf"
+                        pos_hint: {"center_x": .75, "center_y": .9}
+                        background_color: 0, 0, 0, 0
+                        cursor_color: 0, 0, 0, 1
+                        cursor_width: "2sp"
+                        foreground_color: 120/255, 120/255, 120/255, 1
+                        font_size: "14sp"
+                        multiline: False    
+                        input_filter: 'int' 
+                        padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+                        disabled: True                       
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .03}
+                    MDRaisedButton:                
+                        text: "Generate"
+                        md_bg_color: "blue"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        halign: "center"
+                        pos_hint: {"center_x": .5, "center_y": .78}                       
+                        on_press: root.show_progressDialog() 
+                        #on_release: root.generate_sets()
+
+                                    
+
+            MDBottomNavigationItem:
+                id: history
+                name: "history"
+                text: "History"
+                icon: "history"
+                on_tab_press: root.reset_dash(),root.create_history()
+                on_pre_leave: root.remove_table()
+                MDFloatLayout:
+                    size_hint: 1, .2
+                    pos_hint: {"center_x": .5, "center_y": 1}
+                    md_bg_color: 239/255, 239/255, 239/255, 1
+                Image:
+                    source: "assets/megaLogo.png"
+                    pos_hint: {'center_x': .5, 'center_y': .95}  
+                    size_hint: .5, .5   
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .85}
+                    MDLabel:                
+                        text: "History"
+                        font_size: "14sp"
+                        font_name: "Poppins-Bold.ttf"
+                        pos_hint: {"center_x": .5, "center_y": .78}
+                        halign: 'center'
+                        #md_bg_color: 239/255, 239/255, 239/255, 1
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Displays the last 10 winning numbers.'
+                        pos_hint: {"center_x": .35, "center_y": .78}
+                        size_hint_y: None
+                        text_size: self.width, None
+
+                        
+
+            MDBottomNavigationItem:
+                id: settings
+                name: "Settings"
+                text: "Settings"
+                icon: "cog"
+                on_tab_press: root.reset_dash()
+                
+                MDFloatLayout:
+                    size_hint: 1, .2
+                    pos_hint: {"center_x": .5, "center_y": 1}
+                    md_bg_color: 239/255, 239/255, 239/255, 1
+                Image:
+                    source: "assets/megaLogo.png"
+                    pos_hint: {'center_x': .5, 'center_y': .95}  
+                    size_hint: .5, .5   
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .85}
+                    MDLabel:                
+                        text: "Settings"
+                        font_size: "14sp"
+                        font_name: "Poppins-Bold.ttf"
+                        pos_hint: {"center_x": .5, "center_y": .78}
+                        halign: 'center'
+                        #md_bg_color: 239/255, 239/255, 239/255, 1
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Required setup before you can generate sets.'
+                        pos_hint: {"center_x": .35, "center_y": .78}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .77}
+                    MDLabel:         
+                        id: name_label       
+                        text: "Name:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDTextFieldRect:
+                        hint_text : 'Enter your name.'
+                        #hint_font_size: 10
+                        id : name
+                        size_hint_y: .75
+                        font_name: "Poppins-Regular.ttf"
+                        pos_hint: {"center_x": .91, "center_y": .9}
+                        background_color: 0, 0, 0, 0
+                        cursor_color: 0, 0, 0, 1
+                        cursor_width: "2sp"
+                        foreground_color: 120/255, 120/255, 120/255, 1
+                        font_size: "14sp"
+                        multiline: False                            
+                        padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0] 
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Name to include in subject of email.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .72}
+                    MDLabel:         
+                        id: email_label       
+                        text: "Email Address:"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        pos_hint: {"center_x": .57, "center_y": .9}
+                    MDTextFieldRect:
+                        hint_text : 'Enter your email address.'
+                        #hint_font_size: 10
+                        id : email
+                        size_hint_y: .75
+                        font_name: "Poppins-Regular.ttf"
+                        pos_hint: {"center_x": .91, "center_y": .9}
+                        background_color: 0, 0, 0, 0
+                        cursor_color: 0, 0, 0, 1
+                        cursor_width: "2sp"
+                        foreground_color: 120/255, 120/255, 120/255, 1
+                        font_size: "14sp"
+                        multiline: False    
+                        padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0] 
+                    TooltipMDIconButton:
+                        icon: "information-outline"
+                        tooltip_text: 'Email Address to send results to.'
+                        pos_hint: {"center_x": .03, "center_y": .9}
+                        size_hint_y: None
+                        text_size: self.width, None
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .65}
+                    MDLabel:                
+                        text: "Contact us!"
+                        font_size: "14sp"
+                        font_name: "Poppins-Bold.ttf"
+                        pos_hint: {"center_x": .5, "center_y": .78}
+                        halign: 'center'
+                        #md_bg_color: 239/255, 239/255, 239/255, 1  
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .58}
+                    height: dp(30)
+                    MDIconButton:         
+                        id: instagram       
+                        icon: "instagram"
+                        user_font_size: "600sp"
+                        on_release: root.open_social("instagram")
+                        pos_hint: {"center_x": .1, "center_y": .9}
+                    MDIconButton:   
+                        id: facebook       
+                        icon: "facebook"
+                        user_font_size: "600sp"
+                        on_release: root.open_social("facebook")
+                        pos_hint: {"center_x": .3, "center_y": .9}   
+                    MDIconButton:   
+                        id: twitter       
+                        icon: "twitter"
+                        user_font_size: "600sp"
+                        on_release: root.open_social("twitter")
+                        pos_hint: {"center_x": .5, "center_y": .9} 
+                    MDIconButton:   
+                        id: discord       
+                        icon: "chat"
+                        user_font_size: "600sp"
+                        on_release: root.open_social("discord")
+                        pos_hint: {"center_x": .7, "center_y": .9}   
+                    MDIconButton:   
+                        id: emailicon       
+                        icon: "email"
+                        user_font_size: "600sp"
+                        on_release: root.open_social("email")
+                        pos_hint: {"center_x": .9, "center_y": .9}              
+                MDFloatLayout:
+                    size_hint: 1, .08
+                    pos_hint: {"center_x": .5, "center_y": .05}
+                    MDRaisedButton:                
+                        text: "Save"
+                        md_bg_color: "blue"
+                        font_size: "14sp"
+                        font_name: "Poppins-Medium.ttf"
+                        halign: "center"
+                        pos_hint: {"center_x": .5, "center_y": .78}                       
+                        on_press: root.show_email_dialog() #root.save_settings()             
+                
+
+# GUI for pop up window
+<P>:
+	Label:        
+		text : "\u2022 By enabling this the performance will be degraded. \n\u2022 The maximum number of sets will be reduced. \n\u2022 Please re-enter number of sets. \n\u2022 You are required to enter a Win Odd% value while the checkbox is active."
+        size_hint_y: None
+        text_size: self.width, None
+        height: self.texture_size[1]       
+		#size_hint : 0.2, 0.1
+		pos_hint : {"x" : 0.01, "top" : 0.9} 
+
+<Staging>:
+    MDProgressBar:
+        id: progress_bar
+        min: 0
+        max: 1
+        pos_hint: {'x': 1}
+        size_hint_x: .5
+        color: 0, 0, 1, 1    
+    MDLabel:
+        id: progress_label
+        text: "0% Progress" 
+        pos_hint: {'x':-1}        
+    MDBottomNavigationItem:
+        id: check
+        name: "Check"
+        text: "Check"
+        icon: "ticket"
+        on_tab_press: root.reset_dash()
+
+
+        MDFloatLayout:
+            size_hint: 1, .2
+            pos_hint: {"center_x": .5, "center_y": 1}
+            md_bg_color: 239/255, 239/255, 239/255, 1
+        Image:
+            source: "assets/megaLogo.png"
+            pos_hint: {'center_x': .5, 'center_y': .95}  
+            size_hint: .5, .5   
+        MDFloatLayout:
+            size_hint: 1, .08
+            pos_hint: {"center_x": .5, "center_y": .85}
+            MDLabel:                
+                text: "Check Your Numbers"
+                font_size: "14sp"
+                font_name: "Poppins-Medium.ttf"
+                pos_hint: {"center_x": .5, "center_y": .78}
+                halign: 'center'
+                md_bg_color: 239/255, 239/255, 239/255, 1
+            TooltipMDIconButton:
+                icon: "information-outline"
+                tooltip_text: 'Check your numbers against the latest drawing.'
+                pos_hint: {"center_x": .15, "center_y": .78}
+                size_hint_y: None
+                text_size: self.width, None
+        MDFloatLayout:
+            size_hint: 1, .08
+            pos_hint: {"center_x": .5, "center_y": .77}
+            MDTextField:
+                pos_hint: {"center_x": .1, "center_y": .78}
+                size_hint: .1, None
+                height: "30dp"
+                hint_text: "Num1"
+                required: True
+                helper_text_mode: "on_error"
+                helper_text: "Enter text"
+                max_text_length: 2
+            MDTextField:
+                pos_hint: {"center_x": .3, "center_y": .78}
+                size_hint: .1, None
+                height: "30dp"
+                hint_text: "Num2"
+                required: True
+                helper_text_mode: "on_error"
+                helper_text: "Enter text" 
+                max_text_length: 2
+            MDTextField:
+                pos_hint: {"center_x": .5, "center_y": .78}
+                size_hint: .1, None
+                height: "30dp"
+                hint_text: "Num3"
+                required: True
+                helper_text_mode: "on_error"
+                helper_text: "Enter text" 
+                max_text_length: 2
+            MDTextField:
+                pos_hint: {"center_x": .7, "center_y": .78}
+                size_hint: .1, None
+                height: "30dp"
+                hint_text: "Num4"
+                required: True
+                helper_text_mode: "on_error"
+                helper_text: "Enter text"  
+                max_text_length: 2
+            MDTextField:
+                pos_hint: {"center_x": .9, "center_y": .78}
+                size_hint: .1, None
+                height: "30dp"
+                hint_text: "Num5"
+                required: True
+                helper_text_mode: "on_error"
+                helper_text: "Enter text" 
+                max_text_length: 2                             
